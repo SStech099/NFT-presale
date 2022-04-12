@@ -13,9 +13,9 @@ contract BattleOfTheBlockchain is ERC721Enumerable, Ownable {
  
     string public baseExtension = ".json";
  
-    uint256 public cost = 2 ether;
+    uint256 private cost = 2 ether;
  
-    uint256 public presaleCost = 1.75 ether;
+    uint256 private presaleCost = 1.75 ether;
  
     uint256 public maxSupply = 10000;
  
@@ -24,6 +24,8 @@ contract BattleOfTheBlockchain is ERC721Enumerable, Ownable {
     uint256 public maxMintAmount = 10;
  
     uint256 public presaleOpenTime;
+
+    uint private blockTime;
 
     uint public presaleDuration= 60 minutes;
  
@@ -42,6 +44,7 @@ contract BattleOfTheBlockchain is ERC721Enumerable, Ownable {
         string memory _initBaseURI
     ) ERC721(_name, _symbol) {
         setBaseURI(_initBaseURI);
+        blockTime = block.timestamp;
     }
  
     // internal
@@ -80,10 +83,11 @@ contract BattleOfTheBlockchain is ERC721Enumerable, Ownable {
     }
 
     function getPrice() external view returns(uint){
-      if(block.timestamp <= presaleOpenTime + presaleDuration) {
-        return presaleCost;
+      if(blockTime <= presaleOpenTime + presaleDuration) {
+        return cost;
+      }else{
+          return presaleCost;
       }
-      return cost;
     }
  
     function ownerTokenCount(address _owner)
